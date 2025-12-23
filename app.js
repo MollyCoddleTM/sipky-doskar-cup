@@ -4,6 +4,41 @@
 
 const LS_KEY = "sipky2025_state_v1";
 
+// --- Central storage (Supabase) ---
+const SUPABASE_URL = "https://pmukjswanfshryfkbenc.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_fgXRt_PBKmng71KjWIkFtg_8-MqhDMU";
+const REMOTE_ID = "doskar-cup-2025";
+
+async function remoteLoad(){
+  const url = `${SUPABASE_URL}/rest/v1/sipky_state?id=eq.${encodeURIComponent(REMOTE_ID)}&select=data,updated_at`;
+  const res = await fetch(url, {
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+    }
+  });
+  if(!res.ok) return null;
+  const rows = await res.json();
+  return rows?.[0] ?? null;
+}
+
+async function remoteSave(state){
+  const url = `${SUPABASE_URL}/rest/v1/sipky_state`;
+  const body = { id: REMOTE_ID, data: state, updated_at: new Date().toISOString() };
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      Prefer: "resolution=merge-duplicates"
+    },
+    body: JSON.stringify(body)
+  });
+  return res.ok;
+}
+
+
 // --- Simple password protection (prompt every time) ---
 const PASSWORD = "bublina";
 let editAuthed = false;
@@ -640,18 +675,50 @@ document.getElementById("tabView").addEventListener("click", (e) => {
 });
 
 document.getElementById("btnSave").addEventListener("click", () => {
-  requireAuth(() => {
-    saveState(STATE);
-    updatePill();
+  requireAuth(async () => {
+    const ok = await remoteSave(STATE);
+    saveState(STATE); // local cache / fallback
+    updatePill(ok ? "uloženo do cloudu" : "cloud chyba");
   });
 });
 
 document.getElementById("btnReset").addEventListener("click", () => {
-  requireAuth(() => {
-    localStorage.removeItem(LS_KEY);
+  requireAuth(async () => {
     STATE = deepClone(DEFAULT_STATE);
+    const ok = await remoteSave(STATE);
+    saveState(STATE);
+    updatePill(ok ? "reset v cloudu" : "cloud chyba");
     render();
   });
 });
 
-render();
+
+// --- Init: load state from Supabase (cloud) with local fallback ---
+(async () => {
+  try{
+    const remote = await remoteLoad();
+    if(remote && remote.data){
+      STATE = mergeDefaults(remote.data, DEFAULT_STATE);
+      saveState(STATE);
+      updatePill("načteno z cloudu");
+    }else{
+      const local = loadState();
+      if(local){
+        STATE = mergeDefaults(local, DEFAULT_STATE);
+        updatePill("načteno lokálně");
+      }else{
+        updatePill();
+      }
+    }
+  }catch(e){
+    const local = loadState();
+    if(local){
+      STATE = mergeDefaults(local, DEFAULT_STATE);
+      updatePill("offline (lokálně)");
+    }else{
+      updatePill("offline");
+    }
+  }
+  render();
+})();
+
