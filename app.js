@@ -6,7 +6,7 @@ const LS_KEY = "sipky2025_state_v1";
 
 // --- Central storage (Supabase) ---
 const SUPABASE_URL = "https://pmukjswanfshryfkbenc.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_fgXRt_PBKmng71KjWIkFtg_8-MqhDMU";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtdWtqc3dhbmZzaHJ5ZmtiZW5jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY0ODI0NjcsImV4cCI6MjA4MjA1ODQ2N30.gNZ4lBzS86bpobW5hrcegc2Ggs_7ffrcSl5VyuYVKPU";
 const REMOTE_ID = "doskar-cup-2025";
 
 async function remoteLoad(){
