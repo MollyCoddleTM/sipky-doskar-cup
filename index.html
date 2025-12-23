@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Šipky 2025 – tabulky</title>
+  <style>
+    :root{
+      --bg:#0b0d12; --panel:#121622; --panel2:#0f1320; --text:#e8ecff; --muted:#9aa4c7;
+      --line:rgba(255,255,255,.10); --accent:#6ea8ff; --good:#67e8a5; --bad:#ff7a7a;
+      --radius:14px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    body{margin:0;background:linear-gradient(180deg,#070812,#0b0d12 30%,#0b0d12);color:var(--text);}
+    header{position:sticky;top:0;background:rgba(11,13,18,.85);backdrop-filter: blur(10px);border-bottom:1px solid var(--line);z-index:5}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 18px;}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .brand{font-weight:800;letter-spacing:.3px}
+
+    .brandRow{display:flex;align-items:center;gap:12px}
+    .brandImg{height:44px;width:auto;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+    .brandText{font-weight:900;letter-spacing:.3px;font-size:18px}
+
+    .tabs a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:999px;border:1px solid transparent}
+    .tabs a.active{color:var(--text);border-color:var(--line);background:rgba(255,255,255,.04)}
+    .pill{padding:6px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:12px}
+    main{padding:18px}
+    .grid{display:grid;grid-template-columns: 1fr 1.2fr 1fr; gap:14px; align-items:start}
+    @media (max-width: 980px){.grid{grid-template-columns:1fr}}
+    .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+    .card h3{margin:0;padding:12px 14px;border-bottom:1px solid var(--line);font-size:14px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+    .card .body{padding:12px 14px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left}
+    th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+    tr:last-child td{border-bottom:none}
+    .right{text-align:right}
+    .muted{color:var(--muted)}
+    .winner{display:inline-flex;align-items:center;gap:8px}
+    .win-dot{width:10px;height:10px;border-radius:999px;background:var(--good);display:inline-block}
+    .btn{
+      background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--text);
+      padding:8px 12px;border-radius:12px;cursor:pointer
+    }
+    .btn:hover{border-color:rgba(255,255,255,.22)}
+    input[type="text"]{
+      width:100%; padding:8px 10px; border-radius:10px; border:1px solid var(--line);
+      background:rgba(0,0,0,.25); color:var(--text)
+    }
+    .chk{transform: scale(1.2)}
+    .twoCol{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width: 980px){.twoCol{grid-template-columns:1fr}}
+    .footerNote{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.4}
+    .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; border:1px solid var(--line); padding:2px 6px; border-radius:8px; color:var(--muted)}
+  
+    .bannerHeader{position:sticky;top:0;z-index:5}
+    .banner{
+      position:relative;
+      width:100%;
+      height:220px;
+      overflow:hidden;
+      border-bottom:1px solid var(--line);
+    }
+    .banner img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .banner::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(11,13,18,.85));
+    }
+    .bannerOverlay{
+      position:absolute;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      padding:18px;
+      z-index:2;
+    }
+    .bannerTitle{
+      font-size:32px;
+      font-weight:900;
+      letter-spacing:.5px;
+    }
+    .bannerSubtitle{
+      font-size:14px;
+      color:var(--muted);
+    }
+    .navWrap{
+      background:rgba(11,13,18,.9);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+
+
+    /* --- Banner visibility tuning --- */
+    .banner{
+      height:260px;
+    }
+    .banner img{
+      object-position: center 35%;
+      filter: saturate(1.15) contrast(1.1) brightness(1.05);
+    }
+    .banner::after{
+      background:linear-gradient(
+        180deg,
+        rgba(0,0,0,.05) 0%,
+        rgba(0,0,0,.25) 55%,
+        rgba(11,13,18,.7) 100%
+      );
+    }
+    .bannerOverlay{
+      justify-content:flex-end;
+      padding:22px 28px;
+    }
+    .bannerTitle{
+      font-size:34px;
+      text-shadow:0 4px 18px rgba(0,0,0,.65);
+    }
+    .bannerSubtitle{
+      color:#d6dcff;
+      text-shadow:0 2px 10px rgba(0,0,0,.55);
+    }
+
+
+    /* --- Banner: fit whole image (contain) + blurred background fill --- */
+    .banner{
+      height:220px;
+      background:#000;
+    }
+    .bannerBg{
+      position:absolute;
+      inset:-20px; /* overscan for blur edges */
+      background-image:url("./header.png");
+      background-size:cover;
+      background-position:center;
+      filter: blur(14px) saturate(1.15) brightness(.85);
+      transform: scale(1.08);
+      opacity:.85;
+    }
+    .banner::after{
+      /* softer overlay so the image is still visible */
+      background:linear-gradient(180deg,rgba(0,0,0,.10) 0%, rgba(0,0,0,.35) 55%, rgba(11,13,18,.85) 100%);
+    }
+    .bannerFg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:contain;     /* <— show whole image */
+      object-position:center;
+      padding:10px 18px;
+      z-index:1;
+      filter: drop-shadow(0 10px 22px rgba(0,0,0,.45));
+    }
+    .bannerOverlay{ z-index:2; }
+    @media (max-width: 720px){
+      .banner{ height:190px; }
+      .bannerFg{ padding:10px 12px; }
+      .bannerTitle{ font-size:26px; }
+    }
+
+
+    .bannerOverlay{pointer-events:none}
+
+
+    .bannerTitle{
+      text-shadow:0 4px 22px rgba(0,0,0,.75);
+    }
+    .bannerSubtitle{
+      text-shadow:0 3px 14px rgba(0,0,0,.7);
+    }
+
+</style>
+</head>
+<body>
+<header class="bannerHeader">
+  <div class="banner">
+    <div class="bannerBg" aria-hidden="true"></div>
+    <img class="bannerFg" src="./header.png" alt="Doškař Cup" />
+    <div class="bannerOverlay">
+      <div class="bannerTitle">Doškař Cup</div>
+      <div class="bannerSubtitle">Šipkový turnaj</div>
+    </div>
+  </div>
+  <div class="navWrap">
+    <div class="wrap row" style="justify-content:space-between;">
+      <div class="row">
+        <div class="pill" id="statePill">bez uloženého stavu</div>
+      </div>
+      <nav class="tabs row">
+        <a href="#/view" id="tabView">Zobrazení</a>
+        <a href="#/edit" id="tabEdit">Editace</a>
+        <button class="btn" id="btnSave">Uložit stav</button>
+        <button class="btn" id="btnReset">Reset</button>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="app"></div>
+  <div class="footerNote">
+    Ukládání je lokálně do prohlížeče (LocalStorage). Checkboxy jsou v editaci řešené jako „vybral jsem vítěze“ – když zaškrtneš jednu stranu, druhá se automaticky odškrtne.
+  </div>
+</main>
+
+<script src="./app.js"></script>
+
+<!-- Password Modal -->
+<div id="pwModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:9999; align-items:center; justify-content:center;">
+  <div style="background:#121622; border:1px solid rgba(255,255,255,.15); border-radius:16px; padding:22px; width:320px;">
+    <div style="font-weight:800; margin-bottom:10px;">Zadej heslo</div>
+    <input id="pwInput" type="password" placeholder="Heslo" style="width:100%; margin-bottom:12px;" />
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button class="btn" id="pwCancel">Zrušit</button>
+      <button class="btn" id="pwOk">Potvrdit</button>
+    </div>
+    <div id="pwError" style="display:none; color:#ff7a7a; margin-top:8px; font-size:12px;">
+      Nesprávné heslo
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
