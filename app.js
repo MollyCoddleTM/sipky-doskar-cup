@@ -16,13 +16,20 @@ async function remoteLoad(){
     `&id=eq.${encodeURIComponent(REMOTE_ID)}` +
     `&limit=1`;
 
-  const res = await fetch(url, {
-    headers: {
-      apikey: SUPABASE_ANON_KEY,
-      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      Accept: "application/json",
-    }
-  });
+  const headersBoth = {
+    apikey: SUPABASE_ANON_KEY,
+    Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+    Accept: "application/json",
+  };
+
+  // 1) try with Authorization + apikey
+  let res = await fetch(url, { headers: headersBoth });
+
+  // 2) if forbidden/unauthorized, retry with apikey only (some key types don't like Bearer)
+  if(res.status === 401 || res.status === 403){
+    console.warn("Supabase load retry without Authorization header", res.status);
+    res = await fetch(url, { headers: { apikey: SUPABASE_ANON_KEY, Accept: "application/json" } });
+  }
 
   if(!res.ok){
     console.error("Supabase load failed", res.status);
@@ -33,21 +40,37 @@ async function remoteLoad(){
   return rows?.[0] ?? null;
 }
 
+
 async function remoteSave(state){
   const url = `${SUPABASE_URL}/rest/v1/sipky_state`;
   const body = { id: REMOTE_ID, data: state, updated_at: new Date().toISOString() };
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      apikey: SUPABASE_ANON_KEY,
-      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      Prefer: "resolution=merge-duplicates"
-    },
-    body: JSON.stringify(body)
-  });
+
+  const headersBoth = {
+    "Content-Type": "application/json",
+    apikey: SUPABASE_ANON_KEY,
+    Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+    Prefer: "resolution=merge-duplicates"
+  };
+
+  // 1) try with Authorization + apikey
+  let res = await fetch(url, { method: "POST", headers: headersBoth, body: JSON.stringify(body) });
+
+  // 2) retry with apikey only if needed
+  if(res.status === 401 || res.status === 403){
+    console.warn("Supabase save retry without Authorization header", res.status);
+    res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: SUPABASE_ANON_KEY, Prefer: "resolution=merge-duplicates" },
+      body: JSON.stringify(body)
+    });
+  }
+
+  if(!res.ok){
+    console.error("Supabase save failed", res.status);
+  }
   return res.ok;
 }
+
 
 
 // --- Simple password protection (prompt every time) ---
