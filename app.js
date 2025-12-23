@@ -66,8 +66,9 @@ function requireAuth(action){
   const close = () => modal.style.display = "none";
 
   // Make sure we don't accumulate handlers
-  document.getElementById("pwCancel").onclick = () => close();
-  document.getElementById("pwOk").onclick = () => {
+  document.getElementById("pwCancel").onclick = (e) => { if(e){e.preventDefault(); e.stopPropagation();} close(); };
+  document.getElementById("pwOk").onclick = (e) => { if(e){e.preventDefault(); e.stopPropagation();}
+
     if(input.value === PASSWORD){
       close();
       action();
@@ -695,6 +696,7 @@ document.getElementById("btnSave").addEventListener("click", () => {
 
 document.getElementById("btnReset").addEventListener("click", () => {
   requireAuth(async () => {
+    if(!confirm("Opravdu chceš resetovat stav turnaje?")) return;
     STATE = deepClone(DEFAULT_STATE);
     const ok = await remoteSave(STATE);
     saveState(STATE);
