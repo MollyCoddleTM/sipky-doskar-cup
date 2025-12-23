@@ -10,14 +10,25 @@ const SUPABASE_ANON_KEY = "sb_publishable_fgXRt_PBKmng71KjWIkFtg_8-MqhDMU";
 const REMOTE_ID = "doskar-cup-2025";
 
 async function remoteLoad(){
-  const url = `${SUPABASE_URL}/rest/v1/sipky_state?id=eq.${encodeURIComponent(REMOTE_ID)}&select=data,updated_at`;
+  const url =
+    `${SUPABASE_URL}/rest/v1/sipky_state` +
+    `?select=data,updated_at` +
+    `&id=eq.${encodeURIComponent(REMOTE_ID)}` +
+    `&limit=1`;
+
   const res = await fetch(url, {
     headers: {
       apikey: SUPABASE_ANON_KEY,
       Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      Accept: "application/json",
     }
   });
-  if(!res.ok) return null;
+
+  if(!res.ok){
+    console.error("Supabase load failed", res.status);
+    return null;
+  }
+
   const rows = await res.json();
   return rows?.[0] ?? null;
 }
